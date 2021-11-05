@@ -14,7 +14,26 @@ let client = new MongoClient(uri ,{useNewUrlParser:true, useUnifiedTopology: tru
 
 async function run(){
     try{
+        await client.connect();
+        const database = client.db('red-onion');
+        const foodCollection = database.collection('foods');
+        const featureCollection = database.collection('features');
+        const orderCollection = database.collection('orders');
 
+        //Get All Foods 
+        app.get('/foods' , async (req, res) => {
+            const cursor = foodCollection.find({});
+            const foods = await cursor.toArray();
+            res.send(foods);
+        })
+
+        //Get Foods by id
+        app.get('/food/:id', async (req,res) => {
+            const id = req.params.id;
+            const query = {_id : ObjectId(id)};
+            const food = await foodCollection.findOne(query);
+            res.json(food);
+        })
     }
     finally{
 
@@ -22,7 +41,9 @@ async function run(){
 }
 run().catch(console.dir);
 
-
+app.get('/' , (req, res) => {
+    res.send("Welcome to Red Onion Backend Server");
+})
 app.listen(port, err => {
     err ? console.log(err) : console.log("Listing for port :" , port);
 })
