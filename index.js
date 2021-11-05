@@ -41,6 +41,13 @@ async function run(){
             const features = await cursor.toArray();
             res.send(features);
         })
+
+        //Place Order
+        app.post('/submitorder' , async (req,res) => {
+            const orders = req.body;
+            const result = await orderCollection.insertOne(orders);
+            res.json(result);
+        })
     }
     finally{
 
