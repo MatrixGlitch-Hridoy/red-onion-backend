@@ -34,6 +34,13 @@ async function run(){
             const food = await foodCollection.findOne(query);
             res.json(food);
         })
+
+        //Get Features
+        app.get('/features' , async (req,res) => {
+            const cursor = featureCollection.find({});
+            const features = await cursor.toArray();
+            res.send(features);
+        })
     }
     finally{
 
